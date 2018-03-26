@@ -26,7 +26,10 @@ void main() {
     // if using textures, inverse gamma correct
     col = pow(col, vec3(2.2));
 
-    fragColor[0] = vec4(0.0);
-    fragColor[1] = vec4(0.0);
+    //World-Space surface normal of the fragment
+    //Camera-space depth of the fragment
+    fragColor[0] = vec4(fs_Nor.x, fs_Nor.y, fs_Nor.z, fs_Pos.z);
+    fragColor[1] = vec4(fs_Nor);
+    //Albedo of the fragment
     fragColor[2] = vec4(col, 1.0);
 }
