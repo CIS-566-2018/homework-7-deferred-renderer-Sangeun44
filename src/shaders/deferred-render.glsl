@@ -21,8 +21,46 @@ uniform vec4 u_CamPos;
 
 vec4 fs_LightVec;
 
-vec2 random2( vec2 p ) {
-    return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);
+
+float random (in vec2 st) {
+    return fract(sin(dot(st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
+
+// Based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float noise (in vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    // Four corners in 2D of a tile
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
+}
+
+#define OCTAVES 6
+float fbm (in vec2 st) {
+    // Initial values
+    float value = 0.0;
+    float amplitude = .5;
+    float frequency = 0.;
+    //
+    // Loop of octaves
+    for (int i = 0; i < OCTAVES; i++) {
+        value += amplitude * noise(st);
+        st *= 2.;
+        amplitude *= .5;
+    }
+    return value;
 }
 
 void main() { 
@@ -44,7 +82,18 @@ void main() {
     float ambientTerm = 0.1;
 	float lightIntensity = diffuseTerm + ambientTerm; 
     
-	out_Col = vec4(diffuseColor.xyzw * lightIntensity );
+	if(CSD_normal.w > 0.9) {
+		vec2 u_resolution = vec2(10.,10.);
+	 	vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    	st.x *= u_resolution.x/u_resolution.y;
+
+    	vec3 color = vec3(0.2,0.1,0.3);
+    	color += fbm(st * sin(u_Time * 0.01));
+
+    	out_Col = vec4(color,1.0);
+	} else {
+		out_Col = vec4(diffuseColor.xyzw * lightIntensity );
+	}
 
 
 }
