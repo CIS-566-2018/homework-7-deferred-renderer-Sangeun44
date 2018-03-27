@@ -15,7 +15,6 @@ out vec4 fragColor[3]; // The data in the ith index of this array of outputs
 
 uniform sampler2D tex_Color;
 
-
 void main() {
     // TODO: pass proper data into gbuffers
     // Presently, the provided shader passes "nothing" to the first
@@ -29,7 +28,7 @@ void main() {
     //World-Space surface normal of the fragment
     //Camera-space depth of the fragment
     fragColor[0] = vec4(fs_Nor.x, fs_Nor.y, fs_Nor.z, fs_Pos.z);
-    fragColor[1] = vec4(fs_Nor);
+    fragColor[1] = vec4(fs_Pos);
     //Albedo of the fragment
     fragColor[2] = vec4(col, 1.0);
 }

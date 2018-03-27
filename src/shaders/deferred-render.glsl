@@ -21,34 +21,30 @@ uniform vec4 u_CamPos;
 
 vec4 fs_LightVec;
 
+vec2 random2( vec2 p ) {
+    return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);
+}
+
 void main() { 
 	// read from GBuffers
 
-	fs_LightVec = vec4(0,10,20,1.0);
+	fs_LightVec = vec4(0, 10, 0, 0.0);
 
-	vec4 gb0 = texture(u_gb0, fs_UV);
+	vec4 CSD_normal = texture(u_gb0, fs_UV);
 	vec4 gb1 = texture(u_gb1, fs_UV);
-	vec4 gb2 = texture(u_gb2, fs_UV);
+	vec4 albedo = texture(u_gb2, fs_UV);
 
 	//color of the image mario 
-	vec4 diffuseColor = texture(u_gb2, fs_UV);
+	vec4 diffuseColor = albedo;
 
   	//Calculate the diffuse term for Lambert shading
- 	float diffuseTerm = dot(normalize(gb0), normalize(fs_LightVec));
+ 	float diffuseTerm = dot(normalize(vec4(CSD_normal.x, CSD_normal.y, CSD_normal.z, 0.)), normalize(fs_LightVec));
     diffuseTerm = clamp(diffuseTerm, 0.0, 1.0);
 
-    float ambientTerm = 0.7;
+    float ambientTerm = 0.1;
 	float lightIntensity = diffuseTerm + ambientTerm; 
     
-	//blinn-phong
-	vec4 view_vec = fs_Pos * u_CamPos;
-    vec4 light_vec = fs_LightVec;
-    vec4 average = normalize((view_vec + light_vec)/2.);
-    vec4 normal = normalize(fs_Nor);
-    float exp = 50.;
-    float SpecularIntensity = max(pow(dot(average, normal), exp), 0.0);
+	out_Col = vec4(diffuseColor.xyzw * lightIntensity );
 
-    // Compute final shaded color
-    out_Col = vec4(diffuseColor.xyzw * lightIntensity + SpecularIntensity);
 
 }
