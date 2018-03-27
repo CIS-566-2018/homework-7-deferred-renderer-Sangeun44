@@ -43,16 +43,19 @@ class OpenGLRenderer {
     new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))
     );
 
+  //mine
+  //the shader for depth of field
+  depthOfField : PostProcess = new PostProcess(
+    new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))
+  );
 
   add8BitPass(pass: PostProcess) {
     this.post8Passes.push(pass);
   }
 
-
   add32BitPass(pass: PostProcess) {
     this.post32Passes.push(pass);
   }
-
 
   constructor(public canvas: HTMLCanvasElement) {
     this.currentTime = 0.0;
@@ -66,10 +69,12 @@ class OpenGLRenderer {
     this.post32Passes = [];
 
     // TODO: these are placeholder post shaders, replace them with something good
-    // this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
-    // this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
+    //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
+    //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
+    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
-    // this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
+    //depth of field blur
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");
@@ -83,17 +88,20 @@ class OpenGLRenderer {
     var gb1loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb1");
     var gb2loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb2");
 
+    var gb0loc = gl.getUniformLocation(this.depthOfField.prog, "u_gb0");
+    var gb1loc = gl.getUniformLocation(this.depthOfField.prog, "u_gb1");
+    var gb2loc = gl.getUniformLocation(this.depthOfField.prog, "u_gb2");
+    
+   // this.depthOfField.use();
     this.deferredShader.use();
     gl.uniform1i(gb0loc, 0);
     gl.uniform1i(gb1loc, 1);
     gl.uniform1i(gb2loc, 2);
   }
 
-
   setClearColor(r: number, g: number, b: number, a: number) {
     gl.clearColor(r, g, b, a);
   }
-
 
   setSize(width: number, height: number) {
     console.log(width, height);
@@ -187,7 +195,6 @@ class OpenGLRenderer {
     gl.bindTexture(gl.TEXTURE_2D, null);
   }
 
-
   updateTime(deltaTime: number, currentTime: number) {
     this.deferredShader.setTime(currentTime);
     for (let pass of this.post8Passes) pass.setTime(currentTime);
@@ -195,18 +202,15 @@ class OpenGLRenderer {
     this.currentTime = currentTime;
   }
 
-
   clear() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   }
-
 
   clearGB() {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.gBuffer);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
-
 
   renderToGBuffer(camera: Camera, gbProg: ShaderProgram, drawables: Array<Drawable>) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.gBuffer);
