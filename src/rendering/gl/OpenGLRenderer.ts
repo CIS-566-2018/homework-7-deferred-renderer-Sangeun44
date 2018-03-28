@@ -23,14 +23,6 @@ class OpenGLRenderer {
   post32Buffers: WebGLFramebuffer[];
   post32Targets: WebGLTexture[];
 
-  // post-processing buffers pre-tonemapping (32-bit color)
-  post32BuffersTwo: WebGLFramebuffer[];
-  post32TargetsTwo: WebGLTexture[];
-
-  //original buffers
-  originalBuffer: WebGLFramebuffer;
-  originalTarget: WebGLTexture;
-
   // post-processing buffers post-tonemapping (8-bit color)
   post8Buffers: WebGLFramebuffer[];
   post8Targets: WebGLTexture[];
@@ -47,18 +39,30 @@ class OpenGLRenderer {
   // the shader that renders from the gbuffers into the postbuffers
   deferredShader :  PostProcess = new PostProcess(
     new Shader(gl.FRAGMENT_SHADER, require('../../shaders/deferred-render.glsl'))
-    );
+  );
 
   // shader that maps 32-bit color to 8-bit color
   tonemapPass : PostProcess = new PostProcess(
     new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))
-    );
+  );
 
   //mine
   //the shader for depth of field
   depthOfField : PostProcess = new PostProcess(
     new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))
   );
+
+  // bloomBlend: PostProcess = new PostProcess(
+  //   new Shader(gl.FRAGMENT_SHADER, require('../../shaders/bloomBlend.glsl'))
+  // );
+
+  // bloomBlur : PostProcess = new PostProcess(
+  //   new Shader(gl.FRAGMENT_SHADER, require('../../shaders/bloomBlur.glsl'))
+  // );
+
+  // bloomHighPass : PostProcess = new PostProcess(
+  //   new Shader(gl.FRAGMENT_SHADER, require('../../shaders/bloomHighPass.glsl'))
+  // );
 
   add8BitPass(pass: PostProcess) {
     this.post8Passes.push(pass);
@@ -80,6 +84,9 @@ class OpenGLRenderer {
     this.post32Passes = [];
 
     // TODO: these are placeholder post shaders, replace them with something good
+    //this.post8Passes.push(this.depthOfField);
+    // this.post8Passes[i].setExtraData(data);
+    // this.depthOfField.setExtraData([50,0,0,0]);
     //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
     //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
@@ -88,13 +95,13 @@ class OpenGLRenderer {
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))));
 
     //depth of field blur
-    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
 
     //bloom
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/blur-frag.glsl'))));
    // this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/brightness-frag.glsl'))));
     //paint
-    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/oil-paint-frag.glsl'))));
+    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/oil-paint-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");
@@ -108,7 +115,11 @@ class OpenGLRenderer {
     var gb1loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb1");
     var gb2loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb2");
     
-   // this.depthOfField.use();
+    var gb0loc1 = gl.getUniformLocation(this.depthOfField.prog, "u_gb0");
+
+    this.depthOfField.use();
+    gl.uniform1i(gb0loc1, 0);
+ 
     this.deferredShader.use();
     gl.uniform1i(gb0loc, 0);
     gl.uniform1i(gb1loc, 1);
@@ -281,13 +292,13 @@ class OpenGLRenderer {
 
   // TODO: pass any info you need as args
   renderPostProcessHDR(processes: Array<number>, bloom: boolean) {
-    if(bloom) {
-      
-    }
+    // if(bloom) {
+
+    // }
     // // TODO: replace this with your post 32-bit pipeline
     // // the loop shows how to swap between frame buffers and textures given a list of processes,
     // // but specific shaders (e.g. bloom) need specific info as textures
-    // let i = 0;
+    let i = 0;
     // for (i = 0; i < this.post32Passes.length; i++){
     //   // Pingpong framebuffers for each pass.
     //   // In other words, repeatedly flip between storing the output of the
@@ -358,6 +369,9 @@ class OpenGLRenderer {
       gl.bindTexture(gl.TEXTURE_2D, this.post8Targets[(i) % 2]);
 
       this.post8Passes[i].draw();
+      
+      gl.activeTexture(gl.TEXTURE3);
+      gl.bindTexture(gl.TEXTURE_2D, this.gbTargets[0]);
 
       // bind default
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);

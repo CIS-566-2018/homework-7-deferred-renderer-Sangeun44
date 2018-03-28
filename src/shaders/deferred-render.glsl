@@ -82,7 +82,7 @@ void main() {
     float ambientTerm = 0.1;
 	float lightIntensity = diffuseTerm + ambientTerm; 
     
-	if(CSD_normal.w > 0.9) {
+	if(CSD_normal.w > 0.99999) {
 		vec2 u_resolution = vec2(10.,10.);
 	 	vec2 st = gl_FragCoord.xy/u_resolution.xy;
     	st.x *= u_resolution.x/u_resolution.y;

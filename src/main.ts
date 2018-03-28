@@ -59,16 +59,15 @@ function loadScene() {
   square = new Square(vec3.fromValues(0, 0, 0));
   square.create();
 
-  sphere = new Icosphere(vec3.fromValues(0,0,0), 3, 5);
-  sphere.create();
   mesh0 = new Mesh(obj0, vec3.fromValues(0, 0, 0));
   mesh0.create();
 
   tex0 = new Texture('../resources/textures/wahoo.bmp')
 }
 
-
 function main() {
+  
+  //GUI
   const gui = new DAT.GUI();
   var shaders = gui.addFolder('Post Processes');
   var dof = shaders.addFolder('depthOfField');
@@ -77,7 +76,6 @@ function main() {
   var hatchOn = hatching.add(controls, 'Hatching')
   var bloom = shaders.addFolder('Bloom');
   var bloomOn = bloom.add(controls, 'Bloom');
-
 
 
   // Initial display for framerate
