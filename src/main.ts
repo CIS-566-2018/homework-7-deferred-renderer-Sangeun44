@@ -27,6 +27,12 @@ let mesh0: Mesh;
 let tex0: Texture;
 
 
+const controls = {
+  'DOF': false,
+  'Bloom': false,
+  'Hatching': false,
+};
+
 var timer = {
   deltaTime: 0.0,
   startTime: 0.0,
@@ -62,6 +68,17 @@ function loadScene() {
 
 
 function main() {
+  const gui = new DAT.GUI();
+  var shaders = gui.addFolder('Post Processes');
+  var dof = shaders.addFolder('depthOfField');
+  var DOFOn = dof.add(controls, 'DOF');
+  var hatching = shaders.addFolder('Hatching');
+  var hatchOn = hatching.add(controls, 'Hatching')
+  var bloom = shaders.addFolder('Bloom');
+  var bloomOn = bloom.add(controls, 'Bloom');
+
+
+
   // Initial display for framerate
   const stats = Stats();
   stats.setMode(0);
