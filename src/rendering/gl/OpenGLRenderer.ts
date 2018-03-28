@@ -23,6 +23,14 @@ class OpenGLRenderer {
   post32Buffers: WebGLFramebuffer[];
   post32Targets: WebGLTexture[];
 
+  // post-processing buffers pre-tonemapping (32-bit color)
+  post32BuffersTwo: WebGLFramebuffer[];
+  post32TargetsTwo: WebGLTexture[];
+
+  //original buffers
+  originalBuffer: WebGLFramebuffer;
+  originalTarget: WebGLTexture;
+
   // post-processing buffers post-tonemapping (8-bit color)
   post8Buffers: WebGLFramebuffer[];
   post8Targets: WebGLTexture[];
@@ -30,6 +38,9 @@ class OpenGLRenderer {
   // post processing shader lists, try to limit the number for performance reasons
   post8Passes: PostProcess[];
   post32Passes: PostProcess[];
+
+  //More
+  post32PassesBloom: PostProcess[];
 
   currentTime: number; // timer number to apply to all drawing shaders
 
@@ -74,7 +85,11 @@ class OpenGLRenderer {
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
     //depth of field blur
-    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
+    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
+
+    //bloom
+    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/blur-frag.glsl'))));
+    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/brightness-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");

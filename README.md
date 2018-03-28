@@ -11,14 +11,15 @@ In `deferred-render.glsl`,
 * Directional or point light illumination by at least one light source.
 * a time-offset noise-based image. 
 * Used fbm for noise
-
+![](fbm.png)
 ## HDR Tone Mapping (5 points)
 In `tonemap-frag.glsl`, implemented reinhard from [Filmic Worlds blog](http://filmicworlds.com/blog/filmic-tonemapping-operators/).
 
 ## Post-process effects (75 points)
 three of the effects listed below to receive full credit for this assignment. 
 
-* __Bloom:__ As a 32-bit HDR effect, find and isolate areas of the image with a value higher than 1, then apply a blur effect and add that to the original image to apply a bloom effect. You may implement any of the blurring effects we've discussed. Since bloom requires storing frame data in two frame buffers at the same time, you will very likely have to modify the provided rendering pipeline to not use a `for` loop over the set of `post32Pass`es, since this ping-pongs data between two buffers alternately.
+* __Bloom:__ 
+![](bloom.png)
 * __Approximated depth of field:__ 
 ![](DOF.png)
 * __God rays:__ 

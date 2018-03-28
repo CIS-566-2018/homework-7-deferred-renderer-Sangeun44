@@ -1,6 +1,5 @@
 #version 300 es
 precision highp float;
-
 in vec2 fs_UV;
 
 out vec4 out_Col;
@@ -26,7 +25,6 @@ void main() {
     float sigma = 3.;
     
     vec4 posVec = texture(u_GBuf0, fs_UV);
-    if(posVec.z < 0.2) {
         for(float i = 0.; i < d_X; i++){
             for(float j = 0.; j < d_Y; j++){
                 float first = 1./(2. * 3.141592 * pow(sigma, 2.));
@@ -39,23 +37,7 @@ void main() {
                 weighted_Color = weighted_Color + (weight * vec3(curr_Color));
             }
         } 
-    } else if (posVec.z < 0.5) {
-        for(float i = 0.; i < d_X; i++){
-            for(float j = 0.; j < d_Y; j++){
-                float first = 1./(2. * 3.141592 * pow(sigma, 2.));
-                float e_value = pow(2.71828, (-1. * ((pow(i - d_X / 2., 2.) + pow(j - d_Y / 2., 2.))/(2. * pow(sigma,2.)))));
-                float weight = first * e_value;
 
-                vec2 point_UV = vec2(clamp(fs_UV.x + (i - d_X/2.)/640.f, 0., 1.), clamp(fs_UV.y + (j - d_Y/2.)/480.f, 0., 1.));
-
-                vec4 curr_Color = texture(u_frame, point_UV);
-                weighted_Color = weighted_Color + (weight * vec3(curr_Color));
-            }
-        } 
-    } else {
-        vec4 curr_Color = texture(u_frame, fs_UV);
-        weighted_Color = curr_Color.xyz;
-    }
     
     out_Col = vec4(weighted_Color, 1.);
 }
