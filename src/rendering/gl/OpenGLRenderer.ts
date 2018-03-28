@@ -74,7 +74,7 @@ class OpenGLRenderer {
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
     //depth of field blur
-    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
+    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");
@@ -87,10 +87,6 @@ class OpenGLRenderer {
     var gb0loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb0");
     var gb1loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb1");
     var gb2loc = gl.getUniformLocation(this.deferredShader.prog, "u_gb2");
-
-    var gb0loc = gl.getUniformLocation(this.depthOfField.prog, "u_gb0");
-    var gb1loc = gl.getUniformLocation(this.depthOfField.prog, "u_gb1");
-    var gb2loc = gl.getUniformLocation(this.depthOfField.prog, "u_gb2");
     
    // this.depthOfField.use();
     this.deferredShader.use();
