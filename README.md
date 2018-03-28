@@ -22,12 +22,6 @@ three of the effects listed below to receive full credit for this assignment.
 ![](bloom.png)
 * __Approximated depth of field:__ 
 ![](DOF.png)
-* __God rays:__ 
-
-* __Motion blur:__ Output some velocity value into a G-Buffer and use it to apply
-a directional blur to your scene. This will necessitate adding some motion to your
-3D scene, even if it's as simple as using sine/cosine curves to move your model
-around. You should also account for the motion of the camera when you output velocity into your G-Buffer. Consider storing information somewhere about where your model and camera were positioned last frame to compute velocity vectors.
 
 * __Artistic effect:__ Implement a shader that artistically transforms the scene in some manner. Below is a list of ideas, but you can implement any effect you want provided it's about as complex as the items listed:
    * Pointilism with dots of varying size
