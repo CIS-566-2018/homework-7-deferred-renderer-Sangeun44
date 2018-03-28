@@ -26,6 +26,7 @@ let mesh0: Mesh;
 
 let tex0: Texture;
 
+let processes: Array<number> = [0,0,0];
 
 const controls = {
   'DOF': false,
@@ -117,6 +118,22 @@ function main() {
   standardDeferred.setupTexUnits(["tex_Color"]);
 
   function tick() {
+    DOFOn.onChange(function() {
+      if(controls.DOF.valueOf() == true) {
+        processes[0] = 1;
+      } else {
+        processes[0] = 0;
+      }
+    });
+
+    hatchOn.onChange(function() {
+      if(controls.Hatching.valueOf() == true) {
+        processes[1] = 1;
+      } else {
+        processes[1] = 0;
+      }
+    });
+
     camera.update();
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
@@ -134,7 +151,7 @@ function main() {
     // render from gbuffers into 32-bit color buffer
     renderer.renderFromGBuffer(camera);
     // apply 32-bit post and tonemap from 32-bit color to 8-bit color
-    renderer.renderPostProcessHDR();
+    renderer.renderPostProcessHDR(processes, controls.Bloom.valueOf());
     // apply 8-bit post and draw
     renderer.renderPostProcessLDR();
 
