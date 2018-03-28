@@ -14,7 +14,7 @@ In `deferred-render.glsl`,
 ![](fbm.png)
 ## HDR Tone Mapping (5 points)
 In `tonemap-frag.glsl`, implemented reinhard from [Filmic Worlds blog](http://filmicworlds.com/blog/filmic-tonemapping-operators/).
-
+![](toneMap.png)
 ## Post-process effects (75 points)
 three of the effects listed below to receive full credit for this assignment. 
 
@@ -23,8 +23,8 @@ three of the effects listed below to receive full credit for this assignment.
 * __Approximated depth of field:__ 
 ![](DOF.png)
 
-* __Artistic effect:__ Implement a shader that artistically transforms the scene in some manner. Below is a list of ideas, but you can implement any effect you want provided it's about as complex as the items listed:
-   * Pointilism with dots of varying size
+* __Artistic effect:__ 
+
    * Pencil sketch overlay shading
    * Oil painting, as seen in [The Witcher 3](https://gameitecture.files.wordpress.com/2015/10/887492_10205878896945699_541624563347038791_o.jpg)
    * Browse through ShaderToy and find something inspirational
