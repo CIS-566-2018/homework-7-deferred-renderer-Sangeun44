@@ -1,3 +1,5 @@
+demo: https://sangeun44.github.io/homework-7-deferred-renderer-Sangeun44/
+
 ## Passing data to G-Buffers (10 points)
 From `standard-frag.glsl`:
 * Camera-space depth of the fragment
