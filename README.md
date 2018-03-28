@@ -25,6 +25,8 @@ three of the effects listed below to receive full credit for this assignment.
 
 * __Artistic effect:__ 
 
+Crosshatching = http://learningwebgl.com/blog/?p=2858
+![](crosshatching.png)
    * Pencil sketch overlay shading
    * Oil painting, as seen in [The Witcher 3](https://gameitecture.files.wordpress.com/2015/10/887492_10205878896945699_541624563347038791_o.jpg)
    * Browse through ShaderToy and find something inspirational

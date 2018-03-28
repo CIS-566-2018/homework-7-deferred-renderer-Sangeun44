@@ -85,7 +85,7 @@ class OpenGLRenderer {
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
     //tonemap
-    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))));
+    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))));
 
     //depth of field blur
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
@@ -94,7 +94,7 @@ class OpenGLRenderer {
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/blur-frag.glsl'))));
    // this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/brightness-frag.glsl'))));
     //paint
-    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/oil-paint-frag.glsl'))));
+    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/oil-paint-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");

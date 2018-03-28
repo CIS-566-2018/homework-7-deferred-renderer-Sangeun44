@@ -9,6 +9,7 @@ import {setGL} from './globals';
 import {readTextFile} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import Texture from './rendering/gl/Texture';
+import Icosphere from './geometry/Icosphere';
 
 // Define an object with application parameters and button callbacks
 // const controls = {
@@ -16,6 +17,7 @@ import Texture from './rendering/gl/Texture';
 // };
 
 let square: Square;
+let sphere: Icosphere;
 
 // TODO: replace with your scene's stuff
 
@@ -50,6 +52,8 @@ function loadScene() {
   square = new Square(vec3.fromValues(0, 0, 0));
   square.create();
 
+  sphere = new Icosphere(vec3.fromValues(0,0,0), 3, 5);
+  sphere.create();
   mesh0 = new Mesh(obj0, vec3.fromValues(0, 0, 0));
   mesh0.create();
 
