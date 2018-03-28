@@ -38,7 +38,7 @@ void main() {
                 weighted_Color = weighted_Color + (weight * vec3(curr_Color));
             }
         }
-    } else if(posVec.w < 0.2) {
+    } else if(posVec.w < 0.00002) {
         for(float i = 0.; i < d_X; i++) {
             for(float j = 0.; j < d_Y; j++) {
                 float first = 1./(2. * 3.141592 * pow(sigma, 2.));
