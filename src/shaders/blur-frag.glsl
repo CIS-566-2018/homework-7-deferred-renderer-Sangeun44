@@ -34,7 +34,7 @@ void main() {
                 weighted_Color = weighted_Color + (weight * vec3(curr_Color));
             }
         } 
-    out_Col = texture(u_highpass, fs_UV);
+    //out_Col = texture(u_highpass, fs_UV);
     
-    //out_Col = vec4(weighted_Color, 1.);
+    out_Col = vec4(weighted_Color, 1.);
 }

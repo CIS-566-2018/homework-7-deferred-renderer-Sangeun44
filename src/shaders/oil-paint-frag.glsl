@@ -6,7 +6,6 @@ in vec2 fs_UV;
 out vec4 out_Color;
 
 uniform sampler2D u_frame;
-uniform sampler2D u_Prev;
 uniform sampler2D u_GBuf0;
 
 uniform int u_Time;
@@ -14,7 +13,7 @@ uniform int u_Time;
 
  void main() 
  {
-     vec4 curr_Color = texture(u_GBuf0, fs_UV);
+     vec4 curr_Color = texture(u_frame, fs_UV);
 
             float greyRed = curr_Color.x * 0.21;
             float greyGreen = curr_Color.y * 0.72;

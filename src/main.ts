@@ -29,11 +29,11 @@ let mesh1: Mesh;
 let tex0: Texture;
 let tex1: Texture;
 
-let processes: Array<number> = [0,0,0];
+let processes = [0,0,0];
 
 const controls = {
   'DOF': false,
-  'Bloom': false,
+  'Bloom': true,
   'Hatching': false,
 };
 
@@ -112,6 +112,8 @@ function main() {
   const camera = new Camera(vec3.fromValues(0, 9, 25), vec3.fromValues(0, 9, 0));
 
   const renderer = new OpenGLRenderer(canvas);
+  renderer.addProcesses(processes);
+
   renderer.setClearColor(0, 0, 0, 1);
   gl.enable(gl.DEPTH_TEST);
 
@@ -139,6 +141,15 @@ function main() {
       }
     });
 
+    bloomOn.onChange(function() {
+      if(controls.Bloom.valueOf() == true) {
+        processes[2] = 1;
+      } else {
+        processes[2] = 0;
+      }
+    });
+    renderer.addProcesses(processes);
+
     camera.update();
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
@@ -157,7 +168,7 @@ function main() {
     // render from gbuffers into 32-bit color buffer
     renderer.renderFromGBuffer(camera);
     // apply 32-bit post and tonemap from 32-bit color to 8-bit color
-    renderer.renderPostProcessHDR(processes);
+    renderer.renderPostProcessHDR();
     // apply 8-bit post and draw
     renderer.renderPostProcessLDR();
 

@@ -21,7 +21,7 @@ class PostProcess extends ShaderProgram {
 		this.name = tag;
 
 		// bind position to this location
-		gl.uniform1i(this.unifFrame, 0);
+		if (this.unifFrame != -1) gl.uniform1i(this.unifFrame, 0);
 		if (this.unifHighpass != -1) gl.uniform1i(this.unifHighpass, 2);
 		
 		if (PostProcess.screenQuad === undefined) {
