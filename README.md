@@ -30,10 +30,8 @@ three of the effects listed below to receive full credit for this assignment.
 Crosshatching = http://learningwebgl.com/blog/?p=2858
 ![](crosshatching.png)
    * Pencil sketch overlay shading
-   * Oil painting, as seen in [The Witcher 3](https://gameitecture.files.wordpress.com/2015/10/887492_10205878896945699_541624563347038791_o.jpg)
-   * Browse through ShaderToy and find something inspirational
-   * Invent your own! Just make sure you run it by Adam and the TAs first.
-
+   * Oil painting, as seen in [The Witcher 3]
+![](kuwahara.png)
 ## Extra credit (30 points max)
 * Use Dat.GUI to make some element(s) of your post-processes interactive, even something as simple as being able to activate and deactivate a process. (5 - 15 points)
 * Implement an additional feature from the set listed above (15 points)
