@@ -5,9 +5,7 @@ in vec2 fs_UV;
 out vec4 out_Col;
 
 uniform sampler2D u_frame;
-uniform sampler2D u_Prev;
-uniform sampler2D u_GBuf0;
-
+uniform sampler2D u_highpass;
 
 uniform float u_Time;
 uniform vec4 u_CamPos;   
@@ -24,7 +22,6 @@ void main() {
 
     float sigma = 3.;
     
-    vec4 posVec = texture(u_GBuf0, fs_UV);
         for(float i = 0.; i < d_X; i++){
             for(float j = 0.; j < d_Y; j++){
                 float first = 1./(2. * 3.141592 * pow(sigma, 2.));
@@ -33,11 +30,11 @@ void main() {
 
                 vec2 point_UV = vec2(clamp(fs_UV.x + (i - d_X/2.)/640.f, 0., 1.), clamp(fs_UV.y + (j - d_Y/2.)/480.f, 0., 1.));
 
-                vec4 curr_Color = texture(u_frame, point_UV);
+                vec4 curr_Color = texture(u_highpass, point_UV);
                 weighted_Color = weighted_Color + (weight * vec3(curr_Color));
             }
         } 
-
+    out_Col = texture(u_highpass, fs_UV);
     
-    out_Col = vec4(weighted_Color, 1.);
+    //out_Col = vec4(weighted_Color, 1.);
 }

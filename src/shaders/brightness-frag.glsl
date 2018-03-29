@@ -3,7 +3,7 @@ precision highp float;
 
 in vec2 fs_UV;
 
-out vec4 color;
+out vec4 out_Col;
 
 uniform sampler2D u_frame;
 
@@ -11,7 +11,7 @@ uniform int u_Time;
 
 void main()
 {
-    float threshold = 0.;
+    float threshold = 0.3;
 
     vec4 curr_Color = texture(u_frame, fs_UV);
 
@@ -21,9 +21,8 @@ void main()
     
     float grey = greyRed + greyGreen + greyBlue;
 
-    if(grey > threshold) {
-        color = curr_Color;
-    } else {
-        color = vec4(0.,0.,0.,1.);
+    if (grey < threshold) {
+        out_Col = vec4(0., 0., 0., 1.);
     }
+	out_Col = vec4(curr_Color.xyz, 1.);
 }

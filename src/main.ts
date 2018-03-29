@@ -146,7 +146,6 @@ function main() {
     renderer.updateTime(timer.deltaTime, timer.currentTime);
 
     standardDeferred.bindTexToUnit("tex_Color", tex0, 0);
-    standardDeferred.bindTexToUnit("tex_Color", tex1, 1);
 
     renderer.clear();
     renderer.clearGB();
