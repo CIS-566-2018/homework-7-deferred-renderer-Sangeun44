@@ -79,8 +79,8 @@ class OpenGLRenderer {
     this.post8Targets = [undefined, undefined];
     this.post8Passes = [];
 
-    this.post32Buffers = [undefined, undefined];
-    this.post32Targets = [undefined, undefined];
+    this.post32Buffers = [undefined, undefined, undefined];
+    this.post32Targets = [undefined, undefined, undefined];
     this.post32Passes = [];
 
     // TODO: these are placeholder post shaders, replace them with something good
@@ -95,11 +95,11 @@ class OpenGLRenderer {
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))));
 
     //depth of field blur
-    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
+    //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
 
     //bloom
+   //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/brightness-frag.glsl'))));
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/blur-frag.glsl'))));
-   // this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/brightness-frag.glsl'))));
     //paint
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/oil-paint-frag.glsl'))));
 
@@ -197,7 +197,9 @@ class OpenGLRenderer {
       if (FBOstatus != gl.FRAMEBUFFER_COMPLETE) {
         console.error("GL_FRAMEBUFFER_COMPLETE failed, CANNOT use 8 bit FBO\n");
       }
+    }
 
+    for (let i = 0; i < this.post32Buffers.length; i++) {
       // 32 bit buffers have float textures of type gl.RGBA32F
       this.post32Buffers[i] = gl.createFramebuffer()
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[i]);
@@ -291,7 +293,7 @@ class OpenGLRenderer {
 
 
   // TODO: pass any info you need as args
-  renderPostProcessHDR(processes: Array<number>, bloom: boolean) {
+  renderPostProcessHDR(processes: Array<number>) {
     // if(bloom) {
 
     // }
@@ -299,29 +301,29 @@ class OpenGLRenderer {
     // // the loop shows how to swap between frame buffers and textures given a list of processes,
     // // but specific shaders (e.g. bloom) need specific info as textures
     let i = 0;
-    // for (i = 0; i < this.post32Passes.length; i++){
-    //   // Pingpong framebuffers for each pass.
-    //   // In other words, repeatedly flip between storing the output of the
-    //   // current post-process pass in post32Buffers[1] and post32Buffers[0].
-    //   gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
+    for (i = 0; i < this.post32Passes.length; i++){
+      // Pingpong framebuffers for each pass.
+      // In other words, repeatedly flip between storing the output of the
+      // current post-process pass in post32Buffers[1] and post32Buffers[0].
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
 
-    //   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    //   gl.disable(gl.DEPTH_TEST);
-    //   gl.enable(gl.BLEND);
-    //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      gl.disable(gl.DEPTH_TEST);
+      gl.enable(gl.BLEND);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    //   // Recall that each frame buffer is associated with a texture that stores
-    //   // the output of a render pass. post32Targets is the array that stores
-    //   // these textures, so we alternate reading from the 0th and 1th textures
-    //   // each frame (the texture we wrote to in our previous render pass).
-    //   gl.activeTexture(gl.TEXTURE0);
-    //   gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[(i) % 2]);
+      // Recall that each frame buffer is associated with a texture that stores
+      // the output of a render pass. post32Targets is the array that stores
+      // these textures, so we alternate reading from the 0th and 1th textures
+      // each frame (the texture we wrote to in our previous render pass).
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[2]);
 
-    //   this.post32Passes[i].draw();
+      this.post32Passes[i].draw();
 
-    //   // bind default frame buffer
-    //   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    // }
+      // bind default frame buffer
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
 
     // apply tonemapping
     // TODO: if you significantly change your framework, ensure this doesn't cause bugs!
