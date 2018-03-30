@@ -2935,7 +2935,7 @@ class Drawable {
 
 module.exports = createFilteredVector
 
-var cubicHermite = __webpack_require__(50)
+var cubicHermite = __webpack_require__(47)
 var bsearch = __webpack_require__(12)
 
 function clamp(lo, hi, x) {
@@ -3619,10 +3619,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__geometry_Square__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__geometry_Mesh__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__rendering_gl_OpenGLRenderer__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Camera__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Camera__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__globals__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__ = __webpack_require__(74);
 
 
 
@@ -3649,7 +3649,7 @@ let tex1;
 let processes = [0, 0, 0];
 const controls = {
     'DOF': false,
-    'Bloom': false,
+    'Bloom': true,
     'Hatching': false,
 };
 var timer = {
@@ -3683,12 +3683,11 @@ function loadScene() {
 function main() {
     //GUI
     const gui = new __WEBPACK_IMPORTED_MODULE_2_dat_gui__["GUI"]();
-    var shaders = gui.addFolder('Post Processes');
-    var dof = shaders.addFolder('depthOfField');
+    var dof = gui.addFolder('depthOfField');
     var DOFOn = dof.add(controls, 'DOF');
-    var hatching = shaders.addFolder('Hatching');
+    var hatching = gui.addFolder('Hatching');
     var hatchOn = hatching.add(controls, 'Hatching');
-    var bloom = shaders.addFolder('Bloom');
+    var bloom = gui.addFolder('Bloom');
     var bloomOn = bloom.add(controls, 'Bloom');
     // Initial display for framerate
     const stats = __WEBPACK_IMPORTED_MODULE_1_stats_js__();
@@ -3716,8 +3715,8 @@ function main() {
     renderer.setClearColor(0, 0, 0, 1);
     gl.enable(gl.DEPTH_TEST);
     const standardDeferred = new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["b" /* default */]([
-        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.VERTEX_SHADER, __webpack_require__(78)),
-        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.FRAGMENT_SHADER, __webpack_require__(79)),
+        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.VERTEX_SHADER, __webpack_require__(75)),
+        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.FRAGMENT_SHADER, __webpack_require__(76)),
     ]);
     standardDeferred.setupTexUnits(["tex_Color"]);
     function tick() {
@@ -12371,15 +12370,12 @@ class OpenGLRenderer {
         this.tonemapPass = new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(37)));
         this.currentTime = 0.0;
         this.gbTargets = [undefined, undefined, undefined];
-        this.post8Buffers = [undefined, undefined];
-        this.post8Targets = [undefined, undefined];
+        this.post8Buffers = [undefined, undefined, undefined];
+        this.post8Targets = [undefined, undefined, undefined];
         this.post8Passes = [];
-        this.post32Buffers = [undefined, undefined];
-        this.post32Targets = [undefined, undefined];
+        this.post32Buffers = [undefined, undefined, undefined];
+        this.post32Targets = [undefined, undefined, undefined];
         this.post32Passes = [];
-        this.pre32Buffers = [undefined, undefined];
-        this.pre32Targets = [undefined, undefined];
-        this.pre32Passes = [];
         // TODO: these are placeholder post shaders, replace them with something good
         //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
         //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
@@ -12387,21 +12383,11 @@ class OpenGLRenderer {
         //tonemap 2
         //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/tonemap-frag.glsl'))));
         // //bloom 0, 1
-        this.bloomArr = [
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../shaders/brightness-frag.glsl\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())))),
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(38))),
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(39))),
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(40))),
-        ];
-        this.paintArr = [
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(41))),
-        ];
-        this.hatchArr = [
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(42))),
-        ];
-        this.dofArr = [
-            new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(43))),
-        ];
+        this.add32BitPass(new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(38))));
+        this.add32BitPass(new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(39))));
+        this.add32BitPass(new __WEBPACK_IMPORTED_MODULE_3__PostProcess__["a" /* default */](new __WEBPACK_IMPORTED_MODULE_2__ShaderProgram__["a" /* Shader */](__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAGMENT_SHADER, __webpack_require__(40))));
+        //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/bloom-add-frag.glsl'))));
+        //depth of field blur 2
         //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/depth-of-field-frag.glsl'))));
         //hatching 3
         //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/oil-paint-frag.glsl'))));
@@ -12427,10 +12413,6 @@ class OpenGLRenderer {
     add32BitPass(pass) {
         this.post32Passes.push(pass);
     }
-    add32BitPrePass(pass) {
-        this.pre32Passes.push(pass);
-    }
-    //the types of passes user is using passed from the main.ts
     addProcesses(processes) {
         this.processes = processes;
     }
@@ -12513,22 +12495,6 @@ class OpenGLRenderer {
             if (FBOstatus != __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER_COMPLETE) {
                 console.error("GL_FRAMEBUFFER_COMPLETE failed, CANNOT use 8 bit FBO\n");
             }
-            // 32 bit buffers have float textures of type gl.RGBA32F
-            this.pre32Buffers[i] = __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].createFramebuffer();
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, this.pre32Buffers[i]);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawBuffers([__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].COLOR_ATTACHMENT0]);
-            this.pre32Targets[i] = __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].createTexture();
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.pre32Targets[i]);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].texParameteri(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_MAG_FILTER, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].NEAREST);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].texParameteri(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_MIN_FILTER, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].NEAREST);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].texParameteri(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_WRAP_S, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].CLAMP_TO_EDGE);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].texParameteri(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_WRAP_T, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].CLAMP_TO_EDGE);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].texImage2D(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].RGBA32F, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferWidth, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferHeight, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].RGBA, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FLOAT, null);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].framebufferTexture2D(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].COLOR_ATTACHMENT0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.pre32Targets[i], 0);
-            FBOstatus = __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].checkFramebufferStatus(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER);
-            if (FBOstatus != __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER_COMPLETE) {
-                console.error("GL_FRAMEBUFFER_COMPLETE failed, CANNOT use 8 bit FBO\n");
-            }
         }
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, null);
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, null);
@@ -12590,71 +12556,22 @@ class OpenGLRenderer {
     }
     // TODO: pass any info you need as args
     renderPostProcessHDR() {
-        // "pre-passes" for post-processing
-        let j = 0;
-        // put original framebuffer in texture 0
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE0);
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.post32Targets[0]);
-        // put GBuffer0 in texture 2
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE2);
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.gbTargets[0]);
-        for (j = 0; j < this.pre32Passes.length; j++) {
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, this.pre32Buffers[(j + 1) % 2]);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].viewport(0, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferWidth, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferHeight);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].disable(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_TEST);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].enable(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].BLEND);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].clear(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].COLOR_BUFFER_BIT | __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_BUFFER_BIT);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE1);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.pre32Targets[(j) % 2]);
-            this.pre32Passes[j].draw();
-            // bind default frame buffer
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, null);
-        }
-        // now pre32Targets (0th or 1th, depending on j) has result of pre-pass
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE1);
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.pre32Targets[(j) % 2]);
-        //actual post-processing
-        let i = 0;
-        for (i = 0; i < this.post32Passes.length; i++) {
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].viewport(0, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferWidth, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferHeight);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].disable(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_TEST);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].enable(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].BLEND);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].clear(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].COLOR_BUFFER_BIT | __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_BUFFER_BIT);
-            // Recall that each frame buffer is associated with a texture that stores
-            // the output of a render pass. post32Targets is the array that stores
-            // these textures, so we alternate reading from the 0th and 1th textures
-            // each frame (the texture we wrote to in our previous render pass).
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE0);
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.post32Targets[(i) % 2]);
-            this.post32Passes[i].draw();
-            // bind default frame buffer
-            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, null);
-        }
+        console.log(this.processes[2]);
         //bloom
         //   if(this.processes[2] == 1) {
         //     //bind the new frame buffer to 1
-        //     //pre-pass=====
-        //     //put original framebuffer in texture 0
-        //     gl.activeTexture(gl.TEXTURE0);
-        //     gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[i % 2]);
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, this.pre32Buffers[(j + 1) % 2]);
+        //     gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[2]);
         //     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         //     gl.disable(gl.DEPTH_TEST);
         //     gl.enable(gl.BLEND);
         //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         //     //read texture from 0 u_Frame
-        //     // gl.activeTexture(gl.TEXTURE0);
-        //     // gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
+        //     gl.activeTexture(gl.TEXTURE0);
+        //     gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
         //     //do brightness pass
-        //     this.bloomArr[0].draw();
+        //     this.post32Passes[0].draw();
         //     // bind default frame buffer
         //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        //     j++;
-        //     //set texture
-        //     gl.activeTexture(gl.TEXTURE1);
-        //     gl.bindTexture(gl.TEXTURE_2D, this.pre32Targets[(j) % 2]);
-        //     //post-pass=============
         //     //blur
         //     gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[1]);
         //     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -12687,7 +12604,7 @@ class OpenGLRenderer {
         //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         //   gl.activeTexture(gl.TEXTURE0);
         //   gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
-        //   this.post32Passes[1].draw();
+        //   this.post32Passes[i].draw();
         //   // bind default frame buffer
         //   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         // } else if (this.processes[0] == 1) { 
@@ -12698,31 +12615,30 @@ class OpenGLRenderer {
         //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         //   gl.activeTexture(gl.TEXTURE0);
         //   gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[1]);
-        //   this.post32Passes[0].draw();
+        //   this.post32Passes[i].draw();
         //   // bind default frame buffer
         //   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         // } else {
-        //   let i = 0;
-        //   for (i = 0; i < this.post32Passes.length; i++) {
-        //     // Pingpong framebuffers for each pass.
-        //     // In other words, repeatedly flip between storing the output of the
-        //     // current post-process pass in post32Buffers[1] and post32Buffers[0].
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
-        //     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-        //     gl.disable(gl.DEPTH_TEST);
-        //     gl.enable(gl.BLEND);
-        //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        //     // Recall that each frame buffer is associated with a texture that stores
-        //     // the output of a render pass. post32Targets is the array that stores
-        //     // these textures, so we alternate reading from the 0th and 1th textures
-        //     // each frame (the texture we wrote to in our previous render pass).
-        //     gl.activeTexture(gl.TEXTURE0);
-        //     gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[(i) % 2]);
-        //     this.post32Passes[i].draw();
-        //     // bind default frame buffer
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        //   }
-        // }
+        let i = 0;
+        for (i = 0; i < this.post32Passes.length; i++) {
+            // Pingpong framebuffers for each pass.
+            // In other words, repeatedly flip between storing the output of the
+            // current post-process pass in post32Buffers[1] and post32Buffers[0].
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].viewport(0, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferWidth, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].drawingBufferHeight);
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].disable(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_TEST);
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].enable(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].BLEND);
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].clear(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].COLOR_BUFFER_BIT | __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_BUFFER_BIT);
+            // Recall that each frame buffer is associated with a texture that stores
+            // the output of a render pass. post32Targets is the array that stores
+            // these textures, so we alternate reading from the 0th and 1th textures
+            // each frame (the texture we wrote to in our previous render pass).
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE0);
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.post32Targets[(i) % 2]);
+            this.post32Passes[i].draw();
+            // bind default frame buffer
+            __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindFramebuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].FRAMEBUFFER, null);
+        }
         // apply tonemapping
         // TODO: if you significantly change your framework, ensure this doesn't cause bugs!
         // render to the first 8 bit buffer if there is more post, else default buffer
@@ -12738,7 +12654,7 @@ class OpenGLRenderer {
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].clear(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].COLOR_BUFFER_BIT | __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].DEPTH_BUFFER_BIT);
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE0);
         // bound texture is the last one processed before
-        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.post32Targets[Math.max(0, 1) % 2]);
+        __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, this.post32Targets[Math.max(0, i) % 2]);
         this.tonemapPass.draw();
     }
     // TODO: pass any info you need as args
@@ -12836,44 +12752,26 @@ module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\nout
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_preFrame;\n\nuniform vec2 u_Resolution;\n\nconst float GAUSS_KERNEL[5] = float[5] (0.153388, 0.221461, 0.250301, 0.221461, 0.153388);\n\nvoid main() {\n    vec3 color = vec3(0.);\n    float pixelDim = 1.0/u_Resolution.x;\n    \n    for(int i = -2; i <=2; i++) {\n        color += GAUSS_KERNEL[i+2] * texture(u_preFrame, fs_UV +vec2(float(i) * pixelDim, 0.0)).xyz;\n    }\n        out_Col = vec4(color, 1.0);\n}\n"
+module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\n\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\n\nuniform int u_Time;\n\nvoid main()\n{\n    float threshold = 0.1;\n\n    vec4 curr_Color = texture(u_frame, fs_UV);\n\n    float greyRed = curr_Color.x * 0.21;\n    float greyGreen = curr_Color.y * 0.72;\n    float greyBlue = curr_Color.z * 0.07;\n    \n    float grey = greyRed + greyGreen + greyBlue;\n\n    if (grey > threshold) {\n        out_Col = vec4(curr_Color.xyz, 1.);\n    } else {\n        out_Col = vec4(0.);\n    }\n}\n"
 
 /***/ }),
 /* 39 */
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_preFrame;\n\nuniform vec2 u_Resolution;\n\nconst float GAUSS_KERNEL[5] = float[5] (0.153388, 0.221461, 0.250301, 0.221461, 0.153388);\n\nvoid main() {\n    vec3 color = vec3(0.);\n    float pixelDim = 1.0/u_Resolution.x;\n    \n    for(int i = -2; i <=2; i++) {\n        color += GAUSS_KERNEL[i+2] * texture(u_preFrame, fs_UV + vec2(0.0, float(i) * pixelDim)).xyz;\n    }\n        out_Col = vec4(color, 1.0);\n}\n"
+module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_preFrame;\n\n\nconst float GAUSS_KERNEL[5] = float[5] (0.153388, 0.221461, 0.250301, 0.221461, 0.153388);\n\nvoid main() {\n    vec2 u_Resolution = vec2(260.,260.);\n    vec3 color = vec3(0.);\n    float pixelDim = 1.0/u_Resolution.x;\n    \n    for(int i = -2; i <=2; i++) {\n        color += GAUSS_KERNEL[i+2] * texture(u_preFrame, fs_UV +vec2(float(i) * pixelDim, 0.0)).xyz;\n    }\n        out_Col = vec4(color, 1.0);\n}\n"
 
 /***/ }),
 /* 40 */
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_preFrame;\n//uniform float u_Time;\n\nvoid main() {\n\tvec3 color = texture(u_frame, fs_UV).xyz;\n\tcolor += texture(u_preFrame, fs_UV).xyz;\n\tout_Col = vec4(color, 1.0);\n}"
+module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_preFrame;\n\n\nconst float GAUSS_KERNEL[5] = float[5] (0.153388, 0.221461, 0.250301, 0.221461, 0.153388);\n\nvoid main() {\n        vec2 u_Resolution = vec2(260.,260.);\n    vec3 color = vec3(0.);\n    float pixelDim = 1.0/u_Resolution.x;\n    \n    for(int i = -2; i <=2; i++) {\n        color += GAUSS_KERNEL[i+2] * texture(u_preFrame, fs_UV + vec2(0.0, float(i) * pixelDim)).xyz;\n    }\n        out_Col = vec4(color, 1.0);\n}\n"
 
 /***/ }),
 /* 41 */
-/***/ (function(module, exports) {
-
-module.exports = "#version 300 es\nprecision highp float;\nin vec2 fs_UV;\n\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_highpass;\n\nuniform float u_Time;\nuniform vec4 u_CamPos;   \n\nvoid main() {\n\n    const int radius = 4;\n    float n = float((radius + 1) * (radius + 1));\n\n    vec3 m[4];\n    vec3 s[4];\n    for (int k = 0; k < 4; ++k) {\n        m[k] = vec3(0.0);\n        s[k] = vec3(0.0);\n    }\n\n    for (int j = -radius; j <= 0; ++j)  {\n        for (int i = -radius; i <= 0; ++i)  {\n            vec3 c = texture(u_frame, fs_UV + vec2(i,j)/ vec2(260.,260.)).rgb;\n            m[0] += c;\n            s[0] += c * c;\n        }\n    }\n\n    for (int j = -radius; j <= 0; ++j)  {\n        for (int i = 0; i <= radius; ++i)  {\n            vec3 c = texture(u_frame, fs_UV + vec2(i,j) /vec2(260.,260.)).rgb;\n            m[1] += c;\n            s[1] += c * c;\n        }\n    }\n\n    for (int j = 0; j <= radius; ++j)  {\n        for (int i = 0; i <= radius; ++i)  {\n            vec3 c = texture(u_frame, fs_UV + vec2(i,j) / vec2(240.,240.)).rgb;\n            m[2] += c;\n            s[2] += c * c;\n        }\n    }\n\n    for (int j = 0; j <= radius; ++j)  {\n        for (int i = -radius; i <= 0; ++i)  {\n            vec3 c = texture(u_frame, fs_UV + vec2(i,j) / vec2(240.,240.)).rgb;\n            m[3] += c;\n            s[3] += c * c;\n        }\n    }\n\n\n    float min_sigma2 = 1e+2;\n    for (int k = 0; k < 4; ++k) {\n        m[k] /= n;\n        s[k] = abs(s[k] / n - m[k] * m[k]);\n\n        float sigma2 = s[k].r + s[k].g + s[k].b;\n        if (sigma2 < min_sigma2) {\n            min_sigma2 = sigma2;\n            out_Col = vec4(m[k], 1.0);\n        }\n    }\n}"
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports) {
-
-module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\n\nout vec4 out_Color;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_GBuf0;\n\nuniform int u_Time;\n \n\n void main() \n {\n     vec4 curr_Color = texture(u_frame, fs_UV);\n\n            float greyRed = curr_Color.x * 0.21;\n            float greyGreen = curr_Color.y * 0.72;\n            float greyBlue = curr_Color.z * 0.07;\n\n            float grey = greyRed + greyGreen + greyBlue;\n\n     vec4 lightWeighting = vec4(grey);\n     vec4 color = vec4(1.0, 1.0, 1.0, 1.0);\n        if (length(lightWeighting) < 1.00) {\n            if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0) {\n                color = vec4(0.0, 0.0, 0.0, 1.0);\n            }\n        }\n        if (length(lightWeighting) < 0.75) {\n            if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0) {\n                color = vec4(0.0, 0.0, 0.0, 1.0);\n            }\n        }\n        if (length(lightWeighting) < 0.50) {\n            if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0) {\n                color = vec4(0.0, 0.0, 0.0, 1.0);\n            }\n        }\n\n        if (length(lightWeighting) < 0.3465) {\n            if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0) {\n                color = vec4(0.0, 0.0, 0.0, 1.0);\n            }\n        }\n     out_Color = color;\n }"
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports) {
-
-module.exports = "#version 300 es\nprecision highp float;\n\nin vec2 fs_UV;\n\nout vec4 out_Col;\n\nuniform sampler2D u_frame;\nuniform sampler2D u_gb0;\n\nuniform float u_Time;\nuniform vec4 u_CamPos;   \n\n//blur the more the z frag is further away\n\nvoid main() {\n\tfloat d_X = 30.; //x of kernel\n    float d_Y = 30.; //y of kernel\n    float frag_X = gl_FragCoord.x; //current coord.x\n    float frag_Y = gl_FragCoord.y; //current coord.y\n\n    vec3 weighted_Color; //color\n\n    \n    vec4 posVec = texture(u_gb0, fs_UV);\n        \n    float sigma = 2.;\n    if(posVec.w > 0.995) {\n        for(float i = 0.; i < d_X; i++){\n            for(float j = 0.; j < d_Y; j++){\n                float first = 1./(2. * 3.141592 * pow(sigma, 2.));\n                float e_value = pow(2.71828, (-1. * ((pow(i - d_X / 2., 2.) + pow(j - d_Y / 2., 2.))/(2. * pow(sigma,2.)))));\n                float weight = first * e_value;\n\n                vec2 point_UV = vec2(clamp(fs_UV.x + (i - d_X/2.)/640.f, 0., 1.), clamp(fs_UV.y + (j - d_Y/2.)/480.f, 0., 1.));\n\n                vec4 curr_Color = texture(u_frame, point_UV);\n                weighted_Color = weighted_Color + (weight * vec3(curr_Color));\n            }\n        }\n    } else if(posVec.w < 0.00002) {\n        for(float i = 0.; i < d_X; i++) {\n            for(float j = 0.; j < d_Y; j++) {\n                float first = 1./(2. * 3.141592 * pow(sigma, 2.));\n                float e_value = pow(2.71828, (-1. * ((pow(i - d_X / 2., 2.) + pow(j - d_Y / 2., 2.))/(2. * pow(sigma,2.)))));\n                float weight = first * e_value;\n\n                vec2 point_UV = vec2(clamp(fs_UV.x + (i - d_X/2.)/640.f, 0., 1.), clamp(fs_UV.y + (j - d_Y/2.)/480.f, 0., 1.));\n\n                vec4 curr_Color = texture(u_frame, point_UV);\n                weighted_Color = weighted_Color + (weight * vec3(curr_Color));\n            }\n        }\n    } else {\n        vec4 curr_Color = texture(u_frame, fs_UV);\n        weighted_Color = vec3(curr_Color);\n    }\n    \n    out_Col = vec4(weighted_Color, 1.);\n}"
-
-/***/ }),
-/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_3d_view_controls__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_3d_view_controls__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_3d_view_controls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_3d_view_controls__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_gl_matrix__ = __webpack_require__(2);
 
@@ -12915,7 +12813,7 @@ class Camera {
 
 
 /***/ }),
-/* 45 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12923,11 +12821,11 @@ class Camera {
 
 module.exports = createCamera
 
-var now         = __webpack_require__(46)
-var createView  = __webpack_require__(48)
-var mouseChange = __webpack_require__(71)
-var mouseWheel  = __webpack_require__(73)
-var mouseOffset = __webpack_require__(76)
+var now         = __webpack_require__(43)
+var createView  = __webpack_require__(45)
+var mouseChange = __webpack_require__(68)
+var mouseWheel  = __webpack_require__(70)
+var mouseOffset = __webpack_require__(73)
 
 function createCamera(element, options) {
   element = element || document.body
@@ -13149,7 +13047,7 @@ function createCamera(element, options) {
 
 
 /***/ }),
-/* 46 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {module.exports =
@@ -13160,10 +13058,10 @@ function createCamera(element, options) {
     return +new Date
   }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(47)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)))
 
 /***/ }),
-/* 47 */
+/* 44 */
 /***/ (function(module, exports) {
 
 var g;
@@ -13190,7 +13088,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 48 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13198,9 +13096,9 @@ module.exports = g;
 
 module.exports = createViewController
 
-var createTurntable = __webpack_require__(49)
-var createOrbit     = __webpack_require__(52)
-var createMatrix    = __webpack_require__(55)
+var createTurntable = __webpack_require__(46)
+var createOrbit     = __webpack_require__(49)
+var createMatrix    = __webpack_require__(52)
 
 function ViewController(controllers, mode) {
   this._controllerNames = Object.keys(controllers)
@@ -13318,7 +13216,7 @@ function createViewController(options) {
 }
 
 /***/ }),
-/* 49 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13328,7 +13226,7 @@ module.exports = createTurntableController
 
 var filterVector = __webpack_require__(11)
 var invert44     = __webpack_require__(3)
-var rotateM      = __webpack_require__(51)
+var rotateM      = __webpack_require__(48)
 var cross        = __webpack_require__(13)
 var normalize3   = __webpack_require__(5)
 var dot3         = __webpack_require__(14)
@@ -13896,7 +13794,7 @@ function createTurntableController(options) {
 }
 
 /***/ }),
-/* 50 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13941,7 +13839,7 @@ module.exports = cubicHermite
 module.exports.derivative = dcubicHermite
 
 /***/ }),
-/* 51 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = rotate;
@@ -14010,7 +13908,7 @@ function rotate(out, a, rad, axis) {
 };
 
 /***/ }),
-/* 52 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14020,9 +13918,9 @@ module.exports = createOrbitController
 
 var filterVector  = __webpack_require__(11)
 var lookAt        = __webpack_require__(15)
-var mat4FromQuat  = __webpack_require__(53)
+var mat4FromQuat  = __webpack_require__(50)
 var invert44      = __webpack_require__(3)
-var quatFromFrame = __webpack_require__(54)
+var quatFromFrame = __webpack_require__(51)
 
 function len3(x,y,z) {
   return Math.sqrt(Math.pow(x,2) + Math.pow(y,2) + Math.pow(z,2))
@@ -14409,7 +14307,7 @@ function createOrbitController(options) {
 }
 
 /***/ }),
-/* 53 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = fromQuat;
@@ -14461,7 +14359,7 @@ function fromQuat(out, q) {
 };
 
 /***/ }),
-/* 54 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14508,18 +14406,18 @@ function quatFromFrame(
 }
 
 /***/ }),
-/* 55 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var bsearch   = __webpack_require__(12)
-var m4interp  = __webpack_require__(56)
+var m4interp  = __webpack_require__(53)
 var invert44  = __webpack_require__(3)
-var rotateX   = __webpack_require__(68)
-var rotateY   = __webpack_require__(69)
-var rotateZ   = __webpack_require__(70)
+var rotateX   = __webpack_require__(65)
+var rotateY   = __webpack_require__(66)
+var rotateZ   = __webpack_require__(67)
 var lookAt    = __webpack_require__(15)
 var translate = __webpack_require__(17)
 var scale     = __webpack_require__(19)
@@ -14713,15 +14611,15 @@ function createMatrixCameraController(options) {
 
 
 /***/ }),
-/* 56 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var lerp = __webpack_require__(57)
+var lerp = __webpack_require__(54)
 
-var recompose = __webpack_require__(58)
-var decompose = __webpack_require__(61)
+var recompose = __webpack_require__(55)
+var decompose = __webpack_require__(58)
 var determinant = __webpack_require__(20)
-var slerp = __webpack_require__(66)
+var slerp = __webpack_require__(63)
 
 var state0 = state()
 var state1 = state()
@@ -14770,7 +14668,7 @@ function vec4() {
 }
 
 /***/ }),
-/* 57 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = lerp;
@@ -14795,7 +14693,7 @@ function lerp(out, a, b, t) {
 }
 
 /***/ }),
-/* 58 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -14812,10 +14710,10 @@ From: http://www.w3.org/TR/css3-transforms/#recomposing-to-a-3d-matrix
 var mat4 = {
     identity: __webpack_require__(16),
     translate: __webpack_require__(17),
-    multiply: __webpack_require__(59),
+    multiply: __webpack_require__(56),
     create: __webpack_require__(18),
     scale: __webpack_require__(19),
-    fromRotationTranslation: __webpack_require__(60)
+    fromRotationTranslation: __webpack_require__(57)
 }
 
 var rotationMatrix = mat4.create()
@@ -14860,7 +14758,7 @@ module.exports = function recomposeMat4(matrix, translation, scale, skew, perspe
 }
 
 /***/ }),
-/* 59 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = multiply;
@@ -14907,7 +14805,7 @@ function multiply(out, a, b) {
 };
 
 /***/ }),
-/* 60 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = fromRotationTranslation;
@@ -14965,7 +14863,7 @@ function fromRotationTranslation(out, q, v) {
 };
 
 /***/ }),
-/* 61 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*jshint unused:true*/
@@ -14985,15 +14883,15 @@ https://github.com/ChromiumWebApps/chromium/blob/master/ui/gfx/transform_util.cc
 http://www.w3.org/TR/css3-transforms/#decomposing-a-3d-matrix
 */
 
-var normalize = __webpack_require__(62)
+var normalize = __webpack_require__(59)
 
 var create = __webpack_require__(18)
-var clone = __webpack_require__(63)
+var clone = __webpack_require__(60)
 var determinant = __webpack_require__(20)
 var invert = __webpack_require__(3)
-var transpose = __webpack_require__(64)
+var transpose = __webpack_require__(61)
 var vec3 = {
-    length: __webpack_require__(65),
+    length: __webpack_require__(62),
     normalize: __webpack_require__(5),
     dot: __webpack_require__(14),
     cross: __webpack_require__(13)
@@ -15149,7 +15047,7 @@ function combine(out, a, b, scale1, scale2) {
 }
 
 /***/ }),
-/* 62 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = function normalize(out, mat) {
@@ -15164,7 +15062,7 @@ module.exports = function normalize(out, mat) {
 }
 
 /***/ }),
-/* 63 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = clone;
@@ -15197,7 +15095,7 @@ function clone(a) {
 };
 
 /***/ }),
-/* 64 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = transpose;
@@ -15251,7 +15149,7 @@ function transpose(out, a) {
 };
 
 /***/ }),
-/* 65 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = length;
@@ -15270,13 +15168,13 @@ function length(a) {
 }
 
 /***/ }),
-/* 66 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(67)
+module.exports = __webpack_require__(64)
 
 /***/ }),
-/* 67 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = slerp
@@ -15333,7 +15231,7 @@ function slerp (out, a, b, t) {
 
 
 /***/ }),
-/* 68 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = rotateX;
@@ -15382,7 +15280,7 @@ function rotateX(out, a, rad) {
 };
 
 /***/ }),
-/* 69 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = rotateY;
@@ -15431,7 +15329,7 @@ function rotateY(out, a, rad) {
 };
 
 /***/ }),
-/* 70 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = rotateZ;
@@ -15480,7 +15378,7 @@ function rotateZ(out, a, rad) {
 };
 
 /***/ }),
-/* 71 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15488,7 +15386,7 @@ function rotateZ(out, a, rad) {
 
 module.exports = mouseListen
 
-var mouse = __webpack_require__(72)
+var mouse = __webpack_require__(69)
 
 function mouseListen (element, callback) {
   if (!callback) {
@@ -15692,7 +15590,7 @@ function mouseListen (element, callback) {
 
 
 /***/ }),
-/* 72 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15759,13 +15657,13 @@ exports.y = mouseRelativeY
 
 
 /***/ }),
-/* 73 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var toPX = __webpack_require__(74)
+var toPX = __webpack_require__(71)
 
 module.exports = mouseWheelListen
 
@@ -15806,13 +15704,13 @@ function mouseWheelListen(element, callback, noScroll) {
 
 
 /***/ }),
-/* 74 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var parseUnit = __webpack_require__(75)
+var parseUnit = __webpack_require__(72)
 
 module.exports = toPX
 
@@ -15872,7 +15770,7 @@ function toPX(str, element) {
 }
 
 /***/ }),
-/* 75 */
+/* 72 */
 /***/ (function(module, exports) {
 
 module.exports = function parseUnit(str, out) {
@@ -15887,7 +15785,7 @@ module.exports = function parseUnit(str, out) {
 }
 
 /***/ }),
-/* 76 */
+/* 73 */
 /***/ (function(module, exports) {
 
 var rootPosition = { left: 0, top: 0 }
@@ -15918,7 +15816,7 @@ function getBoundingClientOffset (element) {
 
 
 /***/ }),
-/* 77 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15966,13 +15864,13 @@ class Texture {
 
 
 /***/ }),
-/* 78 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = "#version 300 es\nprecision highp float;\n\nuniform mat4 u_Model;\nuniform mat4 u_ModelInvTr;  \n\nuniform mat4 u_View;   \nuniform mat4 u_Proj; \n\nin vec4 vs_Pos;\nin vec4 vs_Nor;\nin vec4 vs_Col;\nin vec2 vs_UV;\n\nout vec4 fs_Pos;\nout vec4 fs_Nor;            \nout vec4 fs_Col;           \nout vec2 fs_UV;\n\nvoid main()\n{\n    fs_Col = vs_Col;\n    fs_UV = vs_UV;\n    fs_UV.y = 1.0 - fs_UV.y;\n\n    // fragment info is in view space\n    mat3 invTranspose = mat3(u_ModelInvTr);\n    mat3 view = mat3(u_View);\n    fs_Nor = vec4(view * invTranspose * vec3(vs_Nor), 0.);\n    \n    vec4 fs_Pos1 = u_Proj * u_View * u_Model * vs_Pos;\n\n    vec4 fs_Pos2 = fs_Pos1 / fs_Pos1.w;\n    fs_Pos = fs_Pos2;\n\n    gl_Position = u_Proj * u_View * u_Model * vs_Pos;\n}\n"
 
 /***/ }),
-/* 79 */
+/* 76 */
 /***/ (function(module, exports) {
 
 module.exports = "#version 300 es\nprecision highp float;\n\nin vec4 fs_Pos;\nin vec4 fs_Nor;\nin vec4 fs_Col;\nin vec2 fs_UV;\n\nout vec4 fragColor[3]; // The data in the ith index of this array of outputs\n                       // is passed to the ith index of OpenGLRenderer's\n                       // gbTargets array, which is an array of textures.\n                       // This lets us output different types of data,\n                       // such as albedo, normal, and position, as\n                       // separate images from a single render pass.\n\nuniform sampler2D tex_Color;\n\nvoid main() {\n    // TODO: pass proper data into gbuffers\n    // Presently, the provided shader passes \"nothing\" to the first\n    // two gbuffers and basic color to the third.\n\n    vec3 col = texture(tex_Color, fs_UV).rgb;\n\n    // if using textures, inverse gamma correct\n    col = pow(col, vec3(2.2));\n\n    //World-Space surface normal of the fragment\n    //Camera-space depth of the fragment\n    fragColor[0] = vec4(fs_Nor.x, fs_Nor.y, fs_Nor.z, fs_Pos.z);\n    fragColor[1] = vec4(fs_Pos);\n    //Albedo of the fragment\n    fragColor[2] = vec4(col, 1.0);\n}\n"
