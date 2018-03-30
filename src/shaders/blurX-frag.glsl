@@ -7,11 +7,11 @@ out vec4 out_Col;
 uniform sampler2D u_frame;
 uniform sampler2D u_preFrame;
 
-uniform vec2 u_Resolution;
 
 const float GAUSS_KERNEL[5] = float[5] (0.153388, 0.221461, 0.250301, 0.221461, 0.153388);
 
 void main() {
+    vec2 u_Resolution = vec2(260.,260.);
     vec3 color = vec3(0.);
     float pixelDim = 1.0/u_Resolution.x;
     
