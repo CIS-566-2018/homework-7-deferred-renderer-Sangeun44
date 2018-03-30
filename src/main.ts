@@ -33,7 +33,7 @@ let processes = [0,0,0];
 
 const controls = {
   'DOF': false,
-  'Bloom': true,
+  'Bloom': false,
   'Hatching': false,
 };
 

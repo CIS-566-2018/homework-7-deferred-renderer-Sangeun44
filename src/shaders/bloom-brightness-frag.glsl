@@ -11,7 +11,7 @@ uniform int u_Time;
 
 void main()
 {
-    float threshold = 0.3;
+    float threshold = 0.1;
 
     vec4 curr_Color = texture(u_frame, fs_UV);
 
@@ -22,8 +22,8 @@ void main()
     float grey = greyRed + greyGreen + greyBlue;
 
     if (grey > threshold) {
-        	    out_Col = vec4(curr_Color.xyz, 1.);
+        out_Col = vec4(curr_Color.xyz, 1.);
     } else {
-                out_Col = vec4(0., 0., 0., 0.);
+        out_Col = vec4(0.);
     }
 }
