@@ -316,31 +316,6 @@ class OpenGLRenderer {
     }
     //bloom
     if (this.processes[2] == 1) {
-      // pre-pass =======================================================
-      // put original framebuffer in texture 0
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[i % 2]);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
-
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.disable(gl.DEPTH_TEST);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-      //gl.activeTexture(gl.TEXTURE1);
-      //gl.bindTexture(gl.TEXTURE_2D, this.pre32Targets[(j) % 2]);
-      this.bloomArr[0].draw();
-
-      // bind default frame buffer
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-      i++;
-
-      // set right texture
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[(i) % 2]);
-      
-      // post-pass ======================================================
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[(i + 1) % 2]);
 
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
