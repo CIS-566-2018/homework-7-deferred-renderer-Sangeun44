@@ -33,7 +33,7 @@ let processes = [0,0,0];
 
 const controls = {
   'DOF': false,
-  'Bloom': false,
+  'Bloom': true,
   'Hatching': false,
 };
 
@@ -76,12 +76,11 @@ function main() {
   
   //GUI
   const gui = new DAT.GUI();
-  var shaders = gui.addFolder('Post Processes');
-  var dof = shaders.addFolder('depthOfField');
+  var dof = gui.addFolder('depthOfField');
   var DOFOn = dof.add(controls, 'DOF');
-  var hatching = shaders.addFolder('Hatching');
+  var hatching = gui.addFolder('Hatching');
   var hatchOn = hatching.add(controls, 'Hatching')
-  var bloom = shaders.addFolder('Bloom');
+  var bloom = gui.addFolder('Bloom');
   var bloomOn = bloom.add(controls, 'Bloom');
 
 
